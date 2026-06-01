@@ -62,8 +62,43 @@ int main(int argc, char *argv[]) {
 }
 
 Token* Tokenize(const char* str, size_t fsize) {
+    char tok[256];
+    int toklen = 0;
+
     for(int i = 0; i < fsize; i++) {
         char c = str[i];
-        printf("%c\n", c);
+
+        if(isalnum(c) || c == '_') {
+            tok[toklen++] = c;
+        } else {
+            if(toklen > 0) {
+                tok[toklen + 1] = '\0';
+
+                if(isdigit(tok[0])) {
+                    printf("found an integer literal\n");
+                } else {
+                    if(strcmp(tok, "int") == 0) {
+                        printf("found an integer\n");
+                    } else if(strcmp(tok, "return") == 0) {
+                        printf("found a return\n");
+                    } else {
+                        printf("found an identifier\n");
+                    }
+                }
+                toklen = 0;
+            }
+            
+            if(c == '(') {
+                printf("found a left parentheses\n");
+            } else if(c == ')') {
+                printf("found a right parentheses\n");
+            } else if(c == '{') {
+                printf("found a left brace\n");
+            } else if(c == '}') {
+                printf("found a right brace\n");
+            } else if(c == ';') {
+                printf("found a semicolon\n");
+            }  
+        }
     }
 }
