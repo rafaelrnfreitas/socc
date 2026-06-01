@@ -1,4 +1,6 @@
 #include "include/lexer.h"
+#include <ctype.h>
+#include <stdlib.h>
 
 Token* Tokenize(const char* str, size_t fsize, size_t* outCount) {
     Token* tokens = malloc(256 * sizeof(Token));
