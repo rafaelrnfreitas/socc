@@ -57,7 +57,8 @@ int main(int argc, char *argv[]) {
         int* data = (int*)vector.data;
         printf("%d\n", data[i]);
     }
-    free(vector.data);
+    
+    VectorDestroy(&vector);
 
     return 0;
 }

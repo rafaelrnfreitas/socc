@@ -12,5 +12,6 @@ typedef struct {
 
 void VectorInit(Vector* vector, size_t elementSize);
 void VectorPush(void* value, Vector* vector);
+void VectorDestroy(Vector* vector);
 
 #endif

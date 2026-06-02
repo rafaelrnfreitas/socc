@@ -29,3 +29,12 @@ void VectorPush(void* value, Vector* vector) {
 
     vector->length++;
 }
+
+void VectorDestroy(Vector* vector) {
+    if(!vector) return;
+
+    free(vector->data);
+    vector->data = NULL;
+    vector->length = 0;
+    vector->capacity = 0;
+}
