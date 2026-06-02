@@ -2,6 +2,7 @@
 #define LEXER_H
 
 #include <string.h>
+#include "include/vector.h"
 
 typedef enum {
     TOK_INT,
@@ -21,6 +22,6 @@ typedef struct {
     char* value;
 } Token;
 
-Token* Tokenize(const char* str, size_t fsize, size_t* outCount);
+Vector Tokenize(const char* str, size_t fsize);
 
 #endif

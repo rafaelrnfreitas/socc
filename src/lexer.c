@@ -2,9 +2,9 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-Token* Tokenize(const char* str, size_t fsize, size_t* outCount) {
-    Token* tokens = malloc(256 * sizeof(Token));
-    int tokCount = 0;
+Vector Tokenize(const char* str, size_t fsize) {
+    Vector tokens;
+    VectorInit(&tokens, sizeof(Token));
 
     char tok[256];
     size_t toklen = 0;
@@ -23,32 +23,31 @@ Token* Tokenize(const char* str, size_t fsize, size_t* outCount) {
             if(isdigit(tok[0])) {
                 char* value = malloc(toklen + 1);
                 strcpy(value, tok);
-                tokens[tokCount++] = (Token){.type = TOK_INTLIT, .value = value};
+                VectorPush(&(Token){.type = TOK_INTLIT, .value = value}, &tokens);
             } else {
                 if(strcmp(tok, "int") == 0) {
-                    tokens[tokCount++] = (Token){.type = TOK_INT, .value = NULL};
+                    VectorPush(&(Token){.type = TOK_INT, .value = NULL}, &tokens);
                 } else if(strcmp(tok, "return") == 0) {
-                    tokens[tokCount++] = (Token){.type = TOK_RET, .value = NULL};
+                    VectorPush(&(Token){.type = TOK_RET, .value = NULL}, &tokens);
                 } else {
                     char* value = malloc(toklen + 1);
                     strcpy(value, tok);
-                    tokens[tokCount++] = (Token){.type = TOK_ID, .value = value};
+                    VectorPush(&(Token){.type = TOK_ID, .value = value}, &tokens);
                 }
             }
             toklen = 0;
         }
 
         switch(c) {
-            case '(': tokens[tokCount++] = (Token){.type = TOK_LPAREN, .value = NULL}; break;
-            case ')': tokens[tokCount++] = (Token){.type = TOK_RPAREN, .value = NULL}; break;
-            case '{': tokens[tokCount++] = (Token){.type = TOK_LBRACE, .value = NULL}; break;
-            case '}': tokens[tokCount++] = (Token){.type = TOK_RBRACE, .value = NULL}; break;
-            case ';': tokens[tokCount++] = (Token){.type = TOK_SEMICOLON, .value = NULL}; break;
+            case '(': VectorPush(&(Token){.type = TOK_LPAREN, .value = NULL}, &tokens); break;
+            case ')': VectorPush(&(Token){.type = TOK_RPAREN, .value = NULL}, &tokens); break;
+            case '{': VectorPush(&(Token){.type = TOK_LBRACE, .value = NULL}, &tokens); break;
+            case '}': VectorPush(&(Token){.type = TOK_RBRACE, .value = NULL}, &tokens); break;
+            case ';': VectorPush(&(Token){.type = TOK_SEMICOLON, .value = NULL}, &tokens); break;
         }
     }
     
-    tokens[tokCount++] = (Token){.type = TOK_EOF, .value = NULL};
-    *outCount = tokCount;
+    VectorPush(&(Token){.type = TOK_EOF, .value = NULL}, &tokens);
 
     return tokens;
 }

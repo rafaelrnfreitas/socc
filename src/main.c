@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "include/lexer.h"
-#include "include/vector.h"
 
 int main(int argc, char *argv[]) {
     if(argc < 2) {
@@ -35,31 +34,12 @@ int main(int argc, char *argv[]) {
     fread(buffer, sizeof(char), size, fptr);
     buffer[size] = '\0';
 
-    size_t tokenCount = 0;
-    Token* tokens = Tokenize(buffer, size, &tokenCount);
+    Vector tokens = Tokenize(buffer, size);
     
-    for(int i = 0; i < tokenCount; i++) {
-        if(tokens[i].value != NULL) free(tokens[i].value);
-    }
-
-    free(tokens);
+    VectorDestroy(&tokens);
+    
     free(buffer);
     fclose(fptr);
-
-    Vector vector;
-    VectorInit(&vector, sizeof(int));
-
-    for(int i = 0; i < 5; i++) {
-        VectorPush(&i, &vector);
-    }
-    VectorPop(&vector);
-
-    for(int i = 0; i < vector.length; i++) {
-        int* data = (int*)vector.data;
-        printf("%d\n", data[i]);
-    }
-    
-    VectorDestroy(&vector);
 
     return 0;
 }
