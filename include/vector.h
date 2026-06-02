@@ -10,6 +10,7 @@ typedef struct {
     size_t elementSize;
 } Vector;
 
+void VectorInit(Vector* vector, size_t elementSize);
 void VectorPush(void* value, Vector* vector);
 
 #endif

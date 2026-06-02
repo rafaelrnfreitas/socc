@@ -46,12 +46,8 @@ int main(int argc, char *argv[]) {
     free(buffer);
     fclose(fptr);
 
-    Vector vector = {
-        .capacity = 1,
-        .data = malloc(1),
-        .elementSize = sizeof(int),
-        .length = 0
-    };
+    Vector vector;
+    VectorInit(&vector, sizeof(int));
 
     for(int i = 0; i < 5; i++) {
         VectorPush(&i, &vector);
@@ -61,6 +57,7 @@ int main(int argc, char *argv[]) {
         int* data = (int*)vector.data;
         printf("%d\n", data[i]);
     }
+    free(vector.data);
 
     return 0;
 }
