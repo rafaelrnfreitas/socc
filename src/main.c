@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "include/lexer.h"
+#include "include/vector.h"
 
 int main(int argc, char *argv[]) {
     if(argc < 2) {
@@ -44,6 +45,22 @@ int main(int argc, char *argv[]) {
     free(tokens);
     free(buffer);
     fclose(fptr);
+
+    Vector vector = {
+        .capacity = 1,
+        .data = malloc(1),
+        .elementSize = sizeof(int),
+        .length = 0
+    };
+
+    for(int i = 0; i < 5; i++) {
+        VectorPush(&i, &vector);
+    }
+
+    for(int i = 0; i < vector.length; i++) {
+        int* data = (int*)vector.data;
+        printf("%d\n", data[i]);
+    }
 
     return 0;
 }
