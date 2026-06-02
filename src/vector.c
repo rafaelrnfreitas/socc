@@ -36,6 +36,11 @@ void* VectorPop(Vector* vector) {
     return (char*)vector->data + (vector->length * vector->elementSize);
 }
 
+void* VectorGetAt(size_t index, Vector* vector) {
+    if(!vector->data || index >= vector->length) return NULL;
+    return (char*)vector->data + (index * vector->elementSize);
+}
+
 void VectorDestroy(Vector* vector) {
     if(!vector) return;
 
