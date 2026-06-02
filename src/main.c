@@ -52,6 +52,7 @@ int main(int argc, char *argv[]) {
     for(int i = 0; i < 5; i++) {
         VectorPush(&i, &vector);
     }
+    VectorPop(&vector);
 
     for(int i = 0; i < vector.length; i++) {
         int* data = (int*)vector.data;

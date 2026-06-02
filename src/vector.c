@@ -30,6 +30,12 @@ void VectorPush(void* value, Vector* vector) {
     vector->length++;
 }
 
+void* VectorPop(Vector* vector) {
+    if(!vector || vector->length == 0) return NULL;
+    vector->length--;
+    return (char*)vector->data + (vector->length * vector->elementSize);
+}
+
 void VectorDestroy(Vector* vector) {
     if(!vector) return;
 
