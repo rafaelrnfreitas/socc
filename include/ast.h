@@ -7,7 +7,8 @@ typedef enum {
     NODE_NUMBER,
     NODE_RETURN,
     NODE_FUNCTION,
-    NODE_BLOCK
+    NODE_BLOCK,
+    NODE_PROGRAM
 } NodeType;
 
 typedef struct ASTNode {
@@ -20,5 +21,7 @@ typedef struct ASTNode {
         char* id;
     };
 } ASTNode;
+
+ASTNode* CreateNode(NodeType type);
 
 #endif
