@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "include/lexer.h"
+#include "include/ast.h"
+#include "include/parser.h"
 
 int main(int argc, char *argv[]) {
     if(argc < 2) {
@@ -35,6 +37,9 @@ int main(int argc, char *argv[]) {
     buffer[size] = '\0';
 
     Vector tokens = Tokenize(buffer, size);
+
+    ASTNode* root = ParseProgram(&tokens);
+    PrintAST(root, 0);
     
     VectorDestroy(&tokens);
     

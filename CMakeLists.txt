@@ -7,6 +7,8 @@ add_executable(cc
     src/main.c
     src/lexer.c
     src/vector.c
+    src/ast.c
+    src/parser.c
 )
 
 target_include_directories(cc PRIVATE ${CMAKE_SOURCE_DIR})

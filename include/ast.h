@@ -23,5 +23,6 @@ typedef struct ASTNode {
 } ASTNode;
 
 ASTNode* CreateNode(NodeType type);
+void PrintAST(ASTNode* node, int indent);
 
 #endif
