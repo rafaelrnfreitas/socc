@@ -9,6 +9,9 @@ int main(int argc, char *argv[]) {
     if(argc < 2) {
         fprintf(stderr, "Error: missing input file\n");
         return 1;
+    } else if(argc < 3) {
+        fprintf(stderr, "Error: missing output file\n");
+        return 1;
     }
 
     FILE* fptr = fopen(argv[1], "r");
@@ -41,7 +44,7 @@ int main(int argc, char *argv[]) {
 
     ASTNode* root = ParseProgram(&tokens);
 
-    FILE* output = fopen("main.s", "w");
+    FILE* output = fopen(argv[2], "w");
     GenerateProgram(root, output);
     fclose(output);
     
