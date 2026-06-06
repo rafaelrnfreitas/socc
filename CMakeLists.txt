@@ -9,6 +9,7 @@ add_executable(cc
     src/vector.c
     src/ast.c
     src/parser.c
+    src/asmgen.c
 )
 
 target_include_directories(cc PRIVATE ${CMAKE_SOURCE_DIR})
