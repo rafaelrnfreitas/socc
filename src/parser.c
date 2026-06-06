@@ -30,6 +30,8 @@ ASTNode* ParseFunction(size_t* index, Vector* tokens) {
     if(token->type != TOK_ID) return NULL;
     (*index)++;
 
+    function->id = token->value;
+
     token = VectorGetAt(*index, tokens);
     if(token->type != TOK_LPAREN) return NULL;
     (*index)++;
@@ -43,7 +45,6 @@ ASTNode* ParseFunction(size_t* index, Vector* tokens) {
 
     function->childCount++;
     function->children = realloc(function->children, function->childCount * sizeof(ASTNode*));
-
     function->children[function->childCount - 1] = block;
 
     return function;
