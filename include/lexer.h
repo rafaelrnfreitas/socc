@@ -14,6 +14,9 @@ typedef enum {
     TOK_RET,
     TOK_SEMICOLON,
     TOK_INTLIT,
+    TOK_MINUS,
+    TOK_TILDE,
+    TOK_BANG,
     TOK_EOF
 } TokenType;
 

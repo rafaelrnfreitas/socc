@@ -31,5 +31,15 @@ void GenerateReturn(ASTNode* node, FILE* output) {
 }
 
 void GenerateExpression(ASTNode* node, FILE* output) {
-    fprintf(output, "\tmovq $%d, %%rax\n", node->intLit);
+    if(node->type == NODE_NUMBER) {
+        fprintf(output, "\tmovq $%d, %%rax\n", node->intLit);
+    } else if(node->type == NODE_NEG || node->type == NODE_BITNOT) {
+        GenerateExpression(node->children[0], output);
+        fprintf(output, "\tneg %%rax\n");
+    } else if(node->type == NODE_NOT) {
+        GenerateExpression(node->children[0], output);
+        fprintf(output, "\tcmpq $0, %%rax\n");
+        fprintf(output, "\tsete %%al\n");
+        fprintf(output, "\tmovzbq %%al, %%rax\n");
+    }
 }

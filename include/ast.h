@@ -4,11 +4,14 @@
 #include <stddef.h>
 
 typedef enum {
-    NODE_NUMBER,
-    NODE_RETURN,
+    NODE_PROGRAM,
     NODE_FUNCTION,
     NODE_BLOCK,
-    NODE_PROGRAM
+    NODE_NUMBER,
+    NODE_NEG,
+    NODE_NOT,
+    NODE_BITNOT,
+    NODE_RETURN,
 } NodeType;
 
 typedef struct ASTNode {

@@ -108,11 +108,27 @@ ASTNode* ParseReturnStatement(size_t* index, Vector* tokens) {
 
 ASTNode* ParseExpression(size_t* index, Vector* tokens) {
     Token* token = VectorGetAt(*index, tokens);
+    if(!token) return NULL;
 
     if(token->type == TOK_INTLIT) {
         ASTNode* node = CreateNode(NODE_NUMBER);
         node->intLit = atoi(token->value);
         (*index)++;
+        return node;
+    } else if(token->type == TOK_MINUS || token->type == TOK_BANG || token->type == TOK_TILDE) {
+        (*index)++;
+
+        ASTNode* node;
+        if(token->type == TOK_MINUS) node = CreateNode(NODE_NEG);
+        else if(token->type == TOK_BANG) node = CreateNode(NODE_NOT);
+        else node = CreateNode(NODE_BITNOT);
+
+        node->childCount = 1;
+        node->children = malloc(sizeof(ASTNode*));
+        node->children[0] = ParseExpression(index, tokens);
+
+        if(!node->children[0]) return NULL;
+
         return node;
     }
 

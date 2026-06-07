@@ -44,6 +44,9 @@ Vector Tokenize(const char* str, size_t fsize) {
             case '{': VectorPush(&(Token){.type = TOK_OBRACE, .value = NULL}, &tokens); break;
             case '}': VectorPush(&(Token){.type = TOK_CBRACE, .value = NULL}, &tokens); break;
             case ';': VectorPush(&(Token){.type = TOK_SEMICOLON, .value = NULL}, &tokens); break;
+            case '-': VectorPush(&(Token){.type = TOK_MINUS, .value = NULL}, &tokens); break;
+            case '!': VectorPush(&(Token){.type = TOK_BANG, .value = NULL}, &tokens); break;
+            case '~': VectorPush(&(Token){.type = TOK_TILDE, .value = NULL}, &tokens); break;
         }
     }
     
