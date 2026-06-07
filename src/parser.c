@@ -33,11 +33,11 @@ ASTNode* ParseFunction(size_t* index, Vector* tokens) {
     function->id = token->value;
 
     token = VectorGetAt(*index, tokens);
-    if(token->type != TOK_LPAREN) return NULL;
+    if(token->type != TOK_OPAREN) return NULL;
     (*index)++;
 
     token = VectorGetAt(*index, tokens);
-    if(token->type != TOK_RPAREN) return NULL;
+    if(token->type != TOK_CPAREN) return NULL;
     (*index)++;
 
     ASTNode* block = ParseBlock(index, tokens);
@@ -54,13 +54,13 @@ ASTNode* ParseBlock(size_t* index, Vector* tokens) {
     ASTNode* block = CreateNode(NODE_BLOCK);
 
     Token* token = VectorGetAt(*index, tokens);
-    if(token->type != TOK_LBRACE) return NULL;
+    if(token->type != TOK_OBRACE) return NULL;
     (*index)++;
 
     while(1) {
         token = VectorGetAt(*index, tokens);
 
-        if(token->type == TOK_RBRACE) break;
+        if(token->type == TOK_CBRACE) break;
         if(token->type == TOK_EOF) return NULL;
 
         ASTNode* statement = ParseStatement(index, tokens);

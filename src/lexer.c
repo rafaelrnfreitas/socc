@@ -39,10 +39,10 @@ Vector Tokenize(const char* str, size_t fsize) {
         }
 
         switch(c) {
-            case '(': VectorPush(&(Token){.type = TOK_LPAREN, .value = NULL}, &tokens); break;
-            case ')': VectorPush(&(Token){.type = TOK_RPAREN, .value = NULL}, &tokens); break;
-            case '{': VectorPush(&(Token){.type = TOK_LBRACE, .value = NULL}, &tokens); break;
-            case '}': VectorPush(&(Token){.type = TOK_RBRACE, .value = NULL}, &tokens); break;
+            case '(': VectorPush(&(Token){.type = TOK_OPAREN, .value = NULL}, &tokens); break;
+            case ')': VectorPush(&(Token){.type = TOK_CPAREN, .value = NULL}, &tokens); break;
+            case '{': VectorPush(&(Token){.type = TOK_OBRACE, .value = NULL}, &tokens); break;
+            case '}': VectorPush(&(Token){.type = TOK_CBRACE, .value = NULL}, &tokens); break;
             case ';': VectorPush(&(Token){.type = TOK_SEMICOLON, .value = NULL}, &tokens); break;
         }
     }
