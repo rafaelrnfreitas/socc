@@ -3,7 +3,8 @@ project(compiler C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(cc
+add_executable(
+    socc
     src/main.c
     src/lexer.c
     src/vector.c
@@ -12,4 +13,4 @@ add_executable(cc
     src/asmgen.c
 )
 
-target_include_directories(cc PRIVATE ${CMAKE_SOURCE_DIR})
+target_include_directories(socc PRIVATE ${CMAKE_SOURCE_DIR})
