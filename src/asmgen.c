@@ -41,5 +41,25 @@ void GenerateExpression(ASTNode* node, FILE* output) {
         fprintf(output, "\tcmpq $0, %%rax\n");
         fprintf(output, "\tsete %%al\n");
         fprintf(output, "\tmovzbq %%al, %%rax\n");
+    } if(node->type == NODE_ADD || node->type == NODE_SUB || 
+        node->type == NODE_MUL || node->type == NODE_DIV) {
+        GenerateExpression(node->children[0], output);
+        fprintf(output, "\tpushq %%rax\n");
+        GenerateExpression(node->children[1], output);
+        fprintf(output, "\tpopq %%rbx\n");
+
+        if(node->type == NODE_ADD) {
+            fprintf(output, "\taddq %%rbx, %%rax\n");
+        } else if(node->type == NODE_SUB) {
+            fprintf(output, "\tsubq %%rax, %%rbx\n");
+            fprintf(output, "\tmovq %%rbx, %%rax\n");
+        } else if(node->type == NODE_MUL) {
+            fprintf(output, "\timulq %%rbx, %%rax\n");
+        } else if(node->type == NODE_DIV) {
+            fprintf(output, "\tmovq %%rax, %%rcx\n");
+            fprintf(output, "\tmovq %%rbx, %%rax\n");
+            fprintf(output, "\tcqto\n");
+            fprintf(output, "\tidivq %%rcx\n");
+        }
     }
 }

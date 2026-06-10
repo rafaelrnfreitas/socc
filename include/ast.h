@@ -11,6 +11,10 @@ typedef enum {
     NODE_NEG,
     NODE_NOT,
     NODE_BITNOT,
+	NODE_ADD,
+	NODE_SUB,
+	NODE_MUL,
+	NODE_DIV,
     NODE_RETURN,
 } NodeType;
 

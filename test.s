@@ -1,8 +1,12 @@
 .global main
 
 main:
-	movq $0, %rax
-	cmpq $0, %rax
-	sete %al
-	movzbq %al, %rax
+	movq $8, %rax
+	pushq %rax
+	movq $2, %rax
+	popq %rbx
+	movq %rax, %rcx
+	movq %rbx, %rax
+	cqto
+	idivq %rcx
 	ret

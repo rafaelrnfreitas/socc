@@ -14,7 +14,10 @@ typedef enum {
     TOK_RET,
     TOK_SEMICOLON,
     TOK_INTLIT,
+	TOK_PLUS,
     TOK_MINUS,
+	TOK_STAR,
+	TOK_SLASH,
     TOK_TILDE,
     TOK_BANG,
     TOK_EOF
