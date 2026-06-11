@@ -4,7 +4,7 @@ main:
 	movq $0, %rax
 	cmpq $0, %rax
 	jne _true_0
-	movq $1, %rax
+	movq $0, %rax
 	cmpq $0, %rax
 	jne _true_0
 	movq $0, %rax
