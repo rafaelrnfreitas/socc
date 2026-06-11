@@ -15,6 +15,14 @@ typedef enum {
 	NODE_SUB,
 	NODE_MUL,
 	NODE_DIV,
+    NODE_LOG_AND,
+    NODE_LOG_OR,
+    NODE_EQUAL,
+    NODE_NOT_EQUAL,
+    NODE_LESS,
+    NODE_LESS_EQUAL,
+    NODE_GREATER,
+    NODE_GREATER_EQUAL,
     NODE_RETURN,
 } NodeType;
 
@@ -28,7 +36,5 @@ typedef struct ASTNode {
         char* id;
     };
 } ASTNode;
-
-ASTNode* CreateNode(NodeType type);
 
 #endif

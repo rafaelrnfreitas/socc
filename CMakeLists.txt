@@ -6,9 +6,8 @@ set(CMAKE_C_STANDARD 99)
 add_executable(
     socc
     src/main.c
-    src/lexer.c
     src/vector.c
-    src/ast.c
+    src/lexer.c
     src/parser.c
     src/asmgen.c
 )
