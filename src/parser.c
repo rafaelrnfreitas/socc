@@ -454,7 +454,7 @@ ASTNode* ParsePrimaryExpr(size_t* index, Vector* tokens) {
         NodeType op;
 
         if(token->type == TOK_MINUS) op = NODE_NEG;
-        else if(token->type == TOK_TILDE) op = NODE_BITNOT;
+        else if(token->type == TOK_TILDE) op = NODE_BIT_NOT;
         else if(token->type == TOK_BANG) op = NODE_NOT;
         else return NULL;
 

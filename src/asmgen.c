@@ -37,7 +37,7 @@ int IsConstant(ASTNode* node) {
 int IsUnaryOperation(ASTNode* node) {
     return node->type == NODE_NEG ||
            node->type == NODE_NOT ||
-           node->type == NODE_BITNOT;
+           node->type == NODE_BIT_NOT;
 }
 
 int IsBinaryOperation(ASTNode* node) {
@@ -71,7 +71,7 @@ void GenerateExpression(ASTNode* node, FILE* output) {
         if(node->type == NODE_NEG) {
             GenerateExpression(node->children[0], output);
             fprintf(output, "\tneg %%rax\n");
-        } else if(node->type == NODE_BITNOT) {
+        } else if(node->type == NODE_BIT_NOT) {
             GenerateExpression(node->children[0], output);
             fprintf(output, "\tnot %%rax\n");
         } else if(node->type == NODE_NOT) {
