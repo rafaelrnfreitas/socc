@@ -51,6 +51,19 @@ Vector Tokenize(const char* str, size_t fsize) {
                 i++;
                 continue;
             }
+
+			if(c == '<' && next == '<') {
+                VectorPush(&(Token){.type = TOK_LESS_LESS, .value = NULL}, &tokens);
+				i++;
+				continue;
+			}
+			
+			if(c == '>' && next == '>') {
+                VectorPush(&(Token){.type = TOK_GREATER_GREATER, .value = NULL}, &tokens);
+				i++;
+				continue;
+			} 
+			
         }
 
         if(isalnum(c) || c == '_') {
@@ -91,11 +104,16 @@ Vector Tokenize(const char* str, size_t fsize) {
             case '-': VectorPush(&(Token){.type = TOK_MINUS, .value = NULL}, &tokens); break;
             case '*': VectorPush(&(Token){.type = TOK_STAR, .value = NULL}, &tokens); break;
             case '/': VectorPush(&(Token){.type = TOK_SLASH, .value = NULL}, &tokens); break;
+			case '%': VectorPush(&(Token){.type = TOK_PERCENT, .value = NULL}, &tokens); break;
 
             case '!': VectorPush(&(Token){.type = TOK_BANG, .value = NULL}, &tokens); break;
             case '~': VectorPush(&(Token){.type = TOK_TILDE, .value = NULL}, &tokens); break;
             case '<': VectorPush(&(Token){.type = TOK_LESS, .value = NULL}, &tokens); break;
             case '>': VectorPush(&(Token){.type = TOK_GREATER, .value = NULL}, &tokens); break;
+			
+			case '&': VectorPush(&(Token){.type = TOK_AMP, .value = NULL}, &tokens); break;
+			case '|': VectorPush(&(Token){.type = TOK_PIPE, .value = NULL}, &tokens); break;
+			case '^': VectorPush(&(Token){.type = TOK_CARET, .value = NULL}, &tokens); break;
         }
     }
 

@@ -45,20 +45,24 @@ int IsBinaryOperation(ASTNode* node) {
            node->type == NODE_SUB || 
            node->type == NODE_MUL ||
            node->type == NODE_DIV ||
+		   node->type == NODE_MOD ||
            node->type == NODE_EQUAL ||
            node->type == NODE_NOT_EQUAL ||
            node->type == NODE_LESS ||
            node->type == NODE_LESS_EQUAL ||
            node->type == NODE_GREATER ||
-           node->type == NODE_GREATER_EQUAL;
+           node->type == NODE_GREATER_EQUAL ||
+           node->type == NODE_BIT_OR ||
+           node->type == NODE_BIT_AND ||
+           node->type == NODE_BIT_XOR ||
+           node->type == NODE_SHIFT_RIGHT ||
+           node->type == NODE_SHIFT_LEFT;
 }
 
 int IsLogicalOperation(ASTNode* node) {
     return node->type == NODE_LOG_AND || 
            node->type == NODE_LOG_OR;
 }
-
-
 
 void GenerateExpression(ASTNode* node, FILE* output) {
     if(IsConstant(node)) {
@@ -99,6 +103,13 @@ void GenerateExpression(ASTNode* node, FILE* output) {
                 fprintf(output, "\tcqto\n");
                 fprintf(output, "\tidivq %%rcx\n");
                 break;
+            case NODE_MOD:
+                fprintf(output, "\tmovq %%rax, %%rcx\n");
+                fprintf(output, "\tmovq %%rbx, %%rax\n");
+                fprintf(output, "\tcqto\n");
+                fprintf(output, "\tidivq %%rcx\n");
+                fprintf(output, "\tmovq %%rdx, %%rax\n");
+                break;
             case NODE_EQUAL:
                 fprintf(output, "\tcmpq %%rax, %%rbx\n");
                 fprintf(output, "\tmovq $0, %%rax\n");
@@ -124,10 +135,24 @@ void GenerateExpression(ASTNode* node, FILE* output) {
                 fprintf(output, "\tmovq $0, %%rax\n");
                 fprintf(output, "\tsetg %%al\n");
                 break;
-            case NODE_GREATER_EQUAL:
-                fprintf(output, "\tcmpq %%rax, %%rbx\n");
-                fprintf(output, "\tmovq $0, %%rax\n");
-                fprintf(output, "\tsetge %%al\n");
+            case NODE_BIT_OR:
+                fprintf(output, "\torq %%rbx, %%rax\n");
+                break;
+            case NODE_BIT_AND:
+                fprintf(output, "\tandq %%rbx, %%rax\n");
+                break;
+            case NODE_BIT_XOR:
+                fprintf(output, "\txorq %%rbx, %%rax\n");
+                break;
+            case NODE_SHIFT_RIGHT:
+                fprintf(output, "\tmovq %%rax, %%rcx\n");
+                fprintf(output, "\tmovq %%rbx, %%rax\n");
+                fprintf(output, "\tsarq %%cl, %%rax\n");
+                break;
+            case NODE_SHIFT_LEFT:
+                fprintf(output, "\tmovq %%rax, %%rcx\n");
+                fprintf(output, "\tmovq %%rbx, %%rax\n");
+                fprintf(output, "\tsalq %%cl, %%rax\n");
                 break;
         }
     } else if(IsLogicalOperation(node)) {

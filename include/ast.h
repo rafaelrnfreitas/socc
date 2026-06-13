@@ -15,6 +15,7 @@ typedef enum {
 	NODE_SUB,
 	NODE_MUL,
 	NODE_DIV,
+	NODE_MOD,
     NODE_LOG_AND,
     NODE_LOG_OR,
     NODE_EQUAL,
@@ -23,6 +24,11 @@ typedef enum {
     NODE_LESS_EQUAL,
     NODE_GREATER,
     NODE_GREATER_EQUAL,
+	NODE_BIT_AND,
+	NODE_BIT_OR,
+	NODE_BIT_XOR,
+	NODE_SHIFT_LEFT,
+	NODE_SHIFT_RIGHT,
     NODE_RETURN,
 } NodeType;
 

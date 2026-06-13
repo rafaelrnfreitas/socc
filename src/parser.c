@@ -96,7 +96,7 @@ ASTNode* ParseReturnStatement(size_t* index, Vector* tokens) {
     node->type = NODE_RETURN;
     (*index)++;
 
-    ASTNode* expr = ParseExpression(index, tokens);
+    ASTNode* expr = ParseLogicalOrExpr(index, tokens);
     if(!expr) return NULL;
 
     node->childCount = 1;
@@ -111,8 +111,8 @@ ASTNode* ParseReturnStatement(size_t* index, Vector* tokens) {
     return node;
 }
 
-ASTNode* ParseExpression(size_t* index, Vector* tokens) {
-    ASTNode* left = ParseLogicalAndExpression(index, tokens);
+ASTNode* ParseLogicalOrExpr(size_t* index, Vector* tokens) {
+    ASTNode* left = ParseLogicalAndExpr(index, tokens);
     if(!left) return NULL;
 
     while(1) {
@@ -126,7 +126,7 @@ ASTNode* ParseExpression(size_t* index, Vector* tokens) {
 
         (*index)++;
 
-        ASTNode* right = ParseLogicalAndExpression(index, tokens);
+        ASTNode* right = ParseLogicalAndExpr(index, tokens);
         if(!right) return NULL;
 
         ASTNode* node = malloc(sizeof(ASTNode));
@@ -142,8 +142,8 @@ ASTNode* ParseExpression(size_t* index, Vector* tokens) {
     return left;
 }
 
-ASTNode* ParseLogicalAndExpression(size_t* index, Vector* tokens) {
-    ASTNode* left = ParseEqualityExpression(index, tokens);
+ASTNode* ParseLogicalAndExpr(size_t* index, Vector* tokens) {
+    ASTNode* left = ParseBitwiseOrExpr(index, tokens);
     if(!left) return NULL;
 
     while(1) {
@@ -157,7 +157,7 @@ ASTNode* ParseLogicalAndExpression(size_t* index, Vector* tokens) {
 
         (*index)++;
 
-        ASTNode* right = ParseEqualityExpression(index, tokens);
+        ASTNode* right = ParseBitwiseOrExpr(index, tokens);
         if(!right) return NULL;
 
         ASTNode* node = malloc(sizeof(ASTNode));
@@ -173,8 +173,102 @@ ASTNode* ParseLogicalAndExpression(size_t* index, Vector* tokens) {
     return left;
 }
 
-ASTNode* ParseEqualityExpression(size_t* index, Vector* tokens) {
-    ASTNode* left = ParseRelationalExpression(index, tokens);
+ASTNode* ParseBitwiseOrExpr(size_t* index, Vector* tokens) {
+    ASTNode* left = ParseBitwiseXorExpr(index, tokens);
+    if(!left) return NULL;
+
+    while(1) {
+        Token* token = VectorGetAt(*index, tokens);
+        if(!token) break;
+
+        NodeType op;
+
+        if(token->type == TOK_PIPE) op = NODE_BIT_OR;
+        else break;
+
+        (*index)++;
+
+        ASTNode* right = ParseBitwiseXorExpr(index, tokens);
+        if(!right) return NULL;
+
+        ASTNode* node = malloc(sizeof(ASTNode));
+        node->childCount = 2;
+        node->children = malloc(node->childCount * sizeof(ASTNode*));
+        node->type = op;
+        node->children[0] = left;
+        node->children[1] = right;
+
+        left = node;
+    }
+
+    return left;
+}
+
+ASTNode* ParseBitwiseXorExpr(size_t* index, Vector* tokens) {
+    ASTNode* left = ParseBitwiseAndExpr(index, tokens);
+    if(!left) return NULL;
+
+    while(1) {
+        Token* token = VectorGetAt(*index, tokens);
+        if(!token) break;
+
+        NodeType op;
+
+        if(token->type == TOK_CARET) op = NODE_BIT_XOR;
+        else break;
+
+        (*index)++;
+
+        ASTNode* right = ParseBitwiseAndExpr(index, tokens);
+        if(!right) return NULL;
+
+        ASTNode* node = malloc(sizeof(ASTNode));
+        node->childCount = 2;
+        node->children = malloc(node->childCount * sizeof(ASTNode*));
+        node->type = op;
+        node->children[0] = left;
+        node->children[1] = right;
+
+        left = node;
+    }
+
+    return left;
+}
+
+ASTNode* ParseBitwiseAndExpr(size_t* index, Vector* tokens) {
+    ASTNode* left = ParseEqualityExpr(index, tokens);
+    if(!left) return NULL;
+
+    while(1) {
+        Token* token = VectorGetAt(*index, tokens);
+        if(!token) break;
+
+        NodeType op;
+
+        if(token->type == TOK_AMP) op = NODE_BIT_AND;
+        else break;
+
+        (*index)++;
+
+        ASTNode* right = ParseEqualityExpr(index, tokens);
+        if(!right) return NULL;
+
+        ASTNode* node = malloc(sizeof(ASTNode));
+        node->childCount = 2;
+        node->children = malloc(node->childCount * sizeof(ASTNode*));
+        node->type = op;
+        node->children[0] = left;
+        node->children[1] = right;
+
+        left = node;
+    }
+
+    return left;
+}
+
+
+ASTNode* ParseEqualityExpr(size_t* index, Vector* tokens) {
+    ASTNode* left = ParseRelationalExpr(index, tokens);
     if(!left) return NULL;
 
     while(1) {
@@ -189,7 +283,7 @@ ASTNode* ParseEqualityExpression(size_t* index, Vector* tokens) {
 
         (*index)++;
 
-        ASTNode* right = ParseRelationalExpression(index, tokens);
+        ASTNode* right = ParseRelationalExpr(index, tokens);
         if(!right) return NULL;
 
         ASTNode* node = malloc(sizeof(ASTNode));
@@ -205,8 +299,8 @@ ASTNode* ParseEqualityExpression(size_t* index, Vector* tokens) {
     return left;
 }
 
-ASTNode* ParseRelationalExpression(size_t* index, Vector* tokens) {
-    ASTNode* left = ParseAdditiveExpression(index, tokens);
+ASTNode* ParseRelationalExpr(size_t* index, Vector* tokens) {
+    ASTNode* left = ParseShiftExpr(index, tokens);
     if(!left) return NULL;
 
     while(1) {
@@ -223,7 +317,7 @@ ASTNode* ParseRelationalExpression(size_t* index, Vector* tokens) {
 
         (*index)++;
 
-        ASTNode* right = ParseAdditiveExpression(index, tokens);
+        ASTNode* right = ParseShiftExpr(index, tokens);
         if(!right) return NULL;
 
         ASTNode* node = malloc(sizeof(ASTNode));
@@ -239,8 +333,40 @@ ASTNode* ParseRelationalExpression(size_t* index, Vector* tokens) {
     return left;
 }
 
-ASTNode* ParseAdditiveExpression(size_t* index, Vector* tokens) {
-    ASTNode* left = ParseTerm(index, tokens);
+ASTNode* ParseShiftExpr(size_t* index, Vector* tokens) {
+    ASTNode* left = ParseAdditiveExpr(index, tokens);
+    if(!left) return NULL;
+
+    while(1) {
+        Token* token = VectorGetAt(*index, tokens);
+        if(!token) break;
+
+        NodeType op;
+
+        if(token->type == TOK_GREATER_GREATER) op = NODE_SHIFT_RIGHT;
+        else if(token->type == TOK_LESS_LESS) op = NODE_SHIFT_LEFT;
+        else break;
+
+        (*index)++;
+
+        ASTNode* right = ParseAdditiveExpr(index, tokens);
+        if(!right) return NULL;
+
+        ASTNode* node = malloc(sizeof(ASTNode));
+        node->childCount = 2;
+        node->children = malloc(node->childCount * sizeof(ASTNode*));
+        node->type = op;
+        node->children[0] = left;
+        node->children[1] = right;
+
+        left = node;
+    }
+
+    return left;
+}
+
+ASTNode* ParseAdditiveExpr(size_t* index, Vector* tokens) {
+    ASTNode* left = ParseMultiplicativeExpr(index, tokens);
     if(!left) return NULL;
 
     while(1) {
@@ -255,7 +381,7 @@ ASTNode* ParseAdditiveExpression(size_t* index, Vector* tokens) {
 
         (*index)++;
 
-        ASTNode* right = ParseTerm(index, tokens);
+        ASTNode* right = ParseMultiplicativeExpr(index, tokens);
         if(!right) return NULL;
 
         ASTNode* node = malloc(sizeof(ASTNode));
@@ -271,8 +397,8 @@ ASTNode* ParseAdditiveExpression(size_t* index, Vector* tokens) {
     return left;
 }
 
-ASTNode* ParseTerm(size_t* index, Vector* tokens) {
-    ASTNode* left = ParseFactor(index, tokens);
+ASTNode* ParseMultiplicativeExpr(size_t* index, Vector* tokens) {
+    ASTNode* left = ParsePrimaryExpr(index, tokens);
     if(!left) return NULL;
 
     while(1) {
@@ -283,11 +409,12 @@ ASTNode* ParseTerm(size_t* index, Vector* tokens) {
 
         if(token->type == TOK_STAR) op = NODE_MUL;
         else if(token->type == TOK_SLASH) op = NODE_DIV;
+		else if(token->type == TOK_PERCENT) op = NODE_MOD;
         else break;
 
         (*index)++;
 
-        ASTNode* right = ParseFactor(index, tokens);
+        ASTNode* right = ParsePrimaryExpr(index, tokens);
         if(!right) return NULL;
 
         ASTNode* node = malloc(sizeof(ASTNode));
@@ -303,14 +430,14 @@ ASTNode* ParseTerm(size_t* index, Vector* tokens) {
     return left;
 }
 
-ASTNode* ParseFactor(size_t* index, Vector* tokens) {
+ASTNode* ParsePrimaryExpr(size_t* index, Vector* tokens) {
     Token* token = VectorGetAt(*index, tokens);
 
     if(!token) return NULL;
 
     if(token->type == TOK_OPAREN) {
         (*index)++;
-        ASTNode* expr = ParseExpression(index, tokens);
+        ASTNode* expr = ParseLogicalOrExpr(index, tokens);
         if(!expr) return NULL;
 
         Token* next = VectorGetAt(*index, tokens);
@@ -321,7 +448,7 @@ ASTNode* ParseFactor(size_t* index, Vector* tokens) {
     } else if(token->type == TOK_MINUS || token->type == TOK_BANG || token->type == TOK_TILDE) {
         (*index)++;
 
-        ASTNode* operand = ParseFactor(index, tokens);
+        ASTNode* operand = ParseMultiplicativeExpr(index, tokens);
         if(!operand) return NULL;
 
         NodeType op;
